@@ -28,7 +28,9 @@ class BasicNavbar extends Component {
         {isLoggedIn ? 
           <div className="nav navbar-nav">
           {tabs.map((tab) =>
-            <Link key={tab.id} to={"/tabs/"+ tab.id} className="nav-item nav-link" activeClassName="active">{tab.title} <span className="tag tag-default">{tab.unread_count}</span></Link>
+            <Link key={tab.id} to={"/tabs/"+ tab.id} className="nav-item nav-link" activeClassName="active">
+              {tab.title} <span className="tag tag-default">{tab.unread_count}</span>
+            </Link>
           )}
           </div>
         : null }
