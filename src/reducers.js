@@ -1,32 +1,23 @@
 import { combineReducers } from 'redux'
 import { routerReducer } from 'react-router-redux'
+import { reducer as oidcReducer} from 'redux-oidc';
 
-import { LOGIN, LOGOUT, SET_VERSION } from './actions'
-
-function user(state = null, action) {
-  switch (action.type) {
-    case LOGIN:
-      return action.user
-    case LOGOUT:
-      return null
-    default:
-      return state
-  }
-}
-
-function apiVersion(state = null, action) {
-  switch (action.type) {
-    case SET_VERSION:
-      return action.version
-    default:
-      return state
-  }
-}
+import * as user from './reducers/user'
+import * as tabs from './reducers/tabs'
+import * as version from './reducers/version'
 
 const okihome = combineReducers({
-  user,
-  apiVersion,
-  routing: routerReducer
+  user: user.reducer,
+  tabs: tabs.reducer,
+  apiVersion: version.reducer,
+  routing: routerReducer,
+  oidc: oidcReducer,
 })
+
+export const getAllTabs = (state) => state ? tabs.getAll(state.tabs) : [];
+export const getTabWidgets = (state, tabId) => state ? tabs.getWidgets(state.tabs, tabId) : [];
+export const getApiVersion = (state) => state ? version.getVersion(state.apiVersion) : state;
+export const isFetchingApiVersion = (state) => state ? version.getIsFetching(state.apiVersion) : state;
+
 
 export default okihome

@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
 
-class Tabs extends Component {
-  render() {
+import Navbar from '../navbar/Navbar';
+
+class Base extends Component {
+  
+  render() {    
     return (
           <div className="container-fluid">
-            <p>Tabs {this.props.params.tabId}</p>
+            <Navbar />
             {this.props.children}
           </div>
     );
   }
 }
 
-export default Tabs;
+export default Base;
