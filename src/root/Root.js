@@ -2,16 +2,17 @@ import React, { Component } from 'react';
 
 import Navbar from '../navbar/Navbar';
 
-class Base extends Component {
+class Root extends Component {
   
-  render() {    
+  render() {  
+    console.debug('Root', this.props)
     return (
           <div className="container-fluid">
-            <Navbar />
+            <Navbar pathParams={this.props.params} />
             {this.props.children}
           </div>
     );
   }
 }
 
-export default Base;
+export default Root;

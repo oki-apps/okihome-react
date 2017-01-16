@@ -6,41 +6,90 @@ import './Navbar.css';
 
 import userManager from '../userManager';
 
-import { fetchVersion, fetchUser } from '../actions'
+import { fetchVersion, fetchUser, addTab } from '../actions'
 import { getApiVersion, getAllTabs } from '../reducers'
 
 import { Link } from 'react-router'
 
 class BasicNavbar extends Component {
+  constructor(props) {
+    super(props);
+    this.handleNewTabSubmit = this.handleNewTabSubmit.bind(this);
+    this.handleNewTabClick = this.handleNewTabClick.bind(this);
+  }
+  handleNewTabSubmit(event) {
+    this.props.onNewTabClick(event, this.inputNewTabTitle.value);
+    event.preventDefault();
+  }
+  handleNewTabClick(event) {
+    this.props.onNewTabClick(event, this.inputNewTabTitle.value);
+  }
 
   render() {
     const isLoggedIn = (this.props.oidc.user !== null);
+    const isOnTab = (this.props.pathParams && this.props.pathParams.tabId);
     const tabs = this.props.tabs || [];
     const apiVersion = this.props.apiVersion;
     const displayName = this.props.oidc.user ? this.props.oidc.user.profile.name : '';
         
     return (
-      <nav className="navbar navbar-fixed-top navbar-light bg-faded">
-        <Link to="/" className="navbar-brand" activeClassName="active">
-          <img src={logo} width="24" height="24" className="align-baseline" alt="" />{' '}
-          Okihome {apiVersion}
-        </Link>
-        {isLoggedIn ? 
-          <div className="nav navbar-nav">
-          {tabs.map((tab) =>
-            <Link key={tab.id} to={"/tabs/"+ tab.id} className="nav-item nav-link" activeClassName="active">
-              {tab.title} <span className="tag tag-default">{tab.unread_count}</span>
-            </Link>
-          )}
+      <div>
+        <div className="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title" id="exampleModalLongTitle"><i className="fa fa-plus-circle fa-fw"></i> New tab</h5>
+              </div>
+              <div className="modal-body">
+                <form onSubmit={this.handleNewTabClick}>
+                  <div className="form-group">
+                    <label htmlFor="inputTitle">Title</label>
+                    <input type="text" className="form-control" id="inputTitle" placeholder="Tab title" autofocus ref={(input) => this.inputNewTabTitle = input} />
+                  </div>
+                </form>
+              </div>
+              <div className="modal-footer">
+                <div className="btn-group" role="group" aria-label="Actions">
+                  <button type="button" className="btn btn-primary" onClick={this.handleNewTabClick} data-dismiss="modal">OK</button>
+                  <button type="button" className="btn btn-warning" data-dismiss="modal">Cancel</button>
+                </div>
+              </div>
+            </div>
           </div>
-        : null }
-        <div className="nav navbar-nav float-xs-right">
-          {isLoggedIn ? <Link to="/settings" className="nav-item nav-link" activeClassName="active"><i className="fa fa-user fa-fw"></i> {displayName}</Link> : null }
-          {isLoggedIn ? <a href="#" onClick={this.props.onLogoutClick} className="nav-item nav-link"><i className="fa fa-sign-out fa-fw"></i> Log out</a> : null }
-          {isLoggedIn ? null : <a href="#"  onClick={this.props.onLoginClick} className="nav-item nav-link"><i className="fa fa-sign-in fa-fw"></i> Log in</a> }
-          <Link to="/help" className="nav-item nav-link" activeClassName="active"><i className="fa fa-question-circle fa-fw"></i> Help</Link>
         </div>
-      </nav>
+        <nav className="navbar navbar-fixed-top navbar-light bg-faded">
+          <Link to="/" className="navbar-brand" activeClassName="active">
+            <img src={logo} width="24" height="24" className="align-baseline" alt="" />{' '}
+            Okihome {apiVersion}
+          </Link>
+          {isLoggedIn ? 
+            <div className="nav navbar-nav">
+            {tabs.map((tab) =>
+              <Link key={tab.id} to={"/tabs/"+ tab.id} className="nav-item nav-link" activeClassName="active">
+                {tab.title} <span className="tag tag-default">{tab.unread_count}</span>
+              </Link>
+            )}
+              <div className="nav-item dropdown">
+                <a className="nav-link" href="#" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i className="fa fa-plus fa-fw"></i>
+                </a>
+                <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  {isOnTab ? <a className="dropdown-item" href="#"><i className="fa fa-rss fa-fw"></i> Add feed</a> : null }
+                  {isOnTab ? <a className="dropdown-item" href="#"><i className="fa fa-envelope-o fa-fw"></i> Add email</a> : null }
+                  {isOnTab ? <div className="dropdown-divider"></div> : null }
+                  <a className="dropdown-item" href="#" data-toggle="modal" data-target="#exampleModalLong"><i className="fa fa-plus-circle fa-fw"></i> New tab</a>
+                </div>
+              </div>
+            </div>
+          : null }
+          <div className="nav navbar-nav float-xs-right">
+            {isLoggedIn ? <Link to="/settings" className="nav-item nav-link" activeClassName="active"><i className="fa fa-user fa-fw"></i> {displayName}</Link> : null }
+            {isLoggedIn ? <a href="#" onClick={this.props.onLogoutClick} className="nav-item nav-link"><i className="fa fa-sign-out fa-fw"></i> Log out</a> : null }
+            {isLoggedIn ? null : <a href="#"  onClick={this.props.onLoginClick} className="nav-item nav-link"><i className="fa fa-sign-in fa-fw"></i> Log in</a> }
+            <Link to="/help" className="nav-item nav-link" activeClassName="active"><i className="fa fa-question-circle fa-fw"></i> Help</Link>
+          </div>
+        </nav>
+      </div>
     );
   }
 }
@@ -89,6 +138,9 @@ const mapDispatchToProps = (dispatch) => ({
     userManager.removeUser();
     dispatch(push('/'));
   },
+  onNewTabClick : (event, userId, newTabTitle) => {
+    dispatch(addTab(userId, newTabTitle));
+  }
 })
 
 const Navbar = connect(mapStateToProps,mapDispatchToProps)(ActiveNavbar)

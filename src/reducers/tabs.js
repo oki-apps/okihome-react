@@ -3,9 +3,12 @@ import { combineReducers } from 'redux'
 import { SESSION_TERMINATED, USER_EXPIRED } from 'redux-oidc';
 import { FETCH_USER_SUCCESS, FETCH_USER_FAILURE } from '../actions'
 import { FETCH_TAB_SUCCESS, FETCH_TAB_FAILURE, FETCH_TAB_REQUEST } from '../actions'
+import { ADD_TAB_SUCCESS } from '../actions'
 
 function all(state = [], action) {
   switch (action.type) {
+    case ADD_TAB_SUCCESS:
+      return [...state, action.response]
     case FETCH_USER_SUCCESS:
       return action.response.tabs
     case FETCH_USER_FAILURE:
@@ -20,6 +23,7 @@ function all(state = [], action) {
 function widgetsById(state = {}, action) {
   switch (action.type) {
     case FETCH_TAB_SUCCESS:
+    case ADD_TAB_SUCCESS:
       const nextState = {...state}
       nextState[action.response.id] = action.response.widgets;
       return nextState

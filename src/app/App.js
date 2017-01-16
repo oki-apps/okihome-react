@@ -5,7 +5,7 @@ import { OidcProvider } from 'redux-oidc';
 import { Router, browserHistory, Route, IndexRoute } from 'react-router'
 
 import createOidcMiddleware from 'redux-oidc';
-import { routerMiddleware } from 'react-router-redux'
+import { syncHistoryWithStore, routerMiddleware } from 'react-router-redux'
 import createLogger from 'redux-logger'
 import thunk from 'redux-thunk';
 
@@ -32,12 +32,15 @@ const store = createStore(
   applyMiddleware(thunk, oidcMiddleware, logger, routerMiddleware(browserHistory))
 )
 
+// Create an enhanced history that syncs navigation events with the store
+const history = syncHistoryWithStore(browserHistory, store)
+
 class App extends Component {
   render() {
     return (
       <Provider store={store}>
         <OidcProvider store={store} userManager={userManager}>
-          <Router history={browserHistory}>
+          <Router history={history}>
             <Route path="/" component={Root}>
                 <IndexRoute component={Home}/>
                 <Route path="callback" component={OidcCallback}/>

@@ -12,6 +12,10 @@ export const FETCH_TAB_REQUEST = 'FETCH_TAB_REQUEST'
 export const FETCH_TAB_SUCCESS = 'FETCH_TAB_SUCCESS'
 export const FETCH_TAB_FAILURE = 'FETCH_TAB_FAILURE'
 
+export const ADD_TAB_REQUEST = 'ADD_TAB_REQUEST'
+export const ADD_TAB_SUCCESS = 'ADD_TAB_SUCCESS'
+export const ADD_TAB_FAILURE = 'ADD_TAB_FAILURE'
+
 let getToken = (getState) => {
   let state = getState();
   if(state && state.oidc && state.oidc.user) {
@@ -30,10 +34,11 @@ let getToken = (getState) => {
   });
 }
 
-let createAction = (fetchRequest, fetchSuccess, fetchFailure, requestFn, requiresToken = true) => 
+let createAction = (fetchRequest, fetchSuccess, fetchFailure, requestFn, requiresToken = true, data = null) => 
   (dispatch, getState) => {
     dispatch({
-      type: fetchRequest
+      type: fetchRequest,
+      data,
     });
 
     let tokenPromise = requiresToken ? getToken(getState) : Promise.resolve(null);
@@ -42,12 +47,14 @@ let createAction = (fetchRequest, fetchSuccess, fetchFailure, requestFn, require
       return requestFn(token).then(response => {
         dispatch({
           type: fetchSuccess,
+          data,
           response: response.data
         })
       })
       .catch(error => {
         dispatch({
           type: fetchFailure,
+          data,
           message: error.message || 'Unable to retrieve data'
         });
       });
@@ -74,4 +81,13 @@ export const fetchTab = (tabId) => createAction(
   FETCH_TAB_SUCCESS,
   FETCH_TAB_FAILURE,
   (token) => api.getTab(token,tabId),
+);
+
+export const addTab = (tabTitle) => createAction(
+  ADD_TAB_REQUEST,
+  ADD_TAB_SUCCESS,
+  ADD_TAB_FAILURE,
+  (token) => api.addTab(token,tabTitle),
+  true,
+  tabTitle
 );
