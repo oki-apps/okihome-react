@@ -28,13 +28,14 @@ class BasicNavbar extends Component {
   render() {
     const isLoggedIn = (this.props.oidc.user !== null);
     const isOnTab = (this.props.pathParams && this.props.pathParams.tabId);
+    const tabId = isOnTab ? this.props.pathParams.tabId : null;
     const tabs = this.props.tabs || [];
     const apiVersion = this.props.apiVersion;
     const displayName = this.props.oidc.user ? this.props.oidc.user.profile.name : '';
         
     return (
       <div>
-        <div className="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+        <div className="modal fade" id="exampleModalLong" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
           <div className="modal-dialog" role="document">
             <div className="modal-content">
               <div className="modal-header">
@@ -44,7 +45,7 @@ class BasicNavbar extends Component {
                 <form onSubmit={this.handleNewTabClick}>
                   <div className="form-group">
                     <label htmlFor="inputTitle">Title</label>
-                    <input type="text" className="form-control" id="inputTitle" placeholder="Tab title" autofocus ref={(input) => this.inputNewTabTitle = input} />
+                    <input type="text" className="form-control" id="inputTitle" placeholder="Tab title" autoFocus ref={(input) => this.inputNewTabTitle = input} />
                   </div>
                 </form>
               </div>
@@ -83,6 +84,7 @@ class BasicNavbar extends Component {
             </div>
           : null }
           <div className="nav navbar-nav float-xs-right">
+            {isOnTab ? <Link to={"/tabs/"+tabId+"/settings"} className="nav-item nav-link" activeClassName="active"><i className="fa fa-edit fa-fw"></i> Tab settings</Link> : null }
             {isLoggedIn ? <Link to="/settings" className="nav-item nav-link" activeClassName="active"><i className="fa fa-user fa-fw"></i> {displayName}</Link> : null }
             {isLoggedIn ? <a href="#" onClick={this.props.onLogoutClick} className="nav-item nav-link"><i className="fa fa-sign-out fa-fw"></i> Log out</a> : null }
             {isLoggedIn ? null : <a href="#"  onClick={this.props.onLoginClick} className="nav-item nav-link"><i className="fa fa-sign-in fa-fw"></i> Log in</a> }

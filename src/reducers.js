@@ -15,6 +15,7 @@ const okihome = combineReducers({
 })
 
 export const getAllTabs = (state) => state ? tabs.getAll(state.tabs) : [];
+export const getTab = (state, tabId) => state ? tabs.getTab(state.tabs, tabId) : state;
 export const getTabWidgets = (state, tabId) => state ? tabs.getWidgets(state.tabs, tabId) : [];
 export const getApiVersion = (state) => state ? version.getVersion(state.apiVersion) : state;
 export const isFetchingApiVersion = (state) => state ? version.getIsFetching(state.apiVersion) : state;

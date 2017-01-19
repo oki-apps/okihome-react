@@ -19,6 +19,14 @@ export const addTab = function(token, tabTitle){
 return request(token,config.baseApi+'/tabs','POST',{title: tabTitle})
 };
 
+export const updateTab = function(token, tabId, tabTitle){
+return request(token,config.baseApi+'/tabs/'+tabId,'POST',{title: tabTitle})
+};
+
+export const deleteTab = function(token, tabId){
+return request(token,config.baseApi+'/tabs/'+tabId,'DELETE')
+};
+
 // a request helper which reads the access_token from the redux state and passes it in its HTTP request
 export default function request(token, url, method = 'GET', bodyObject = null) {
   const headers = new Headers();

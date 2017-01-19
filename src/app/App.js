@@ -18,6 +18,7 @@ import OidcCallback from '../oidcCallback/OidcCallback';
 import Help from '../help/Help';
 import Settings from '../settings/Settings';
 import Tabs from '../tabs/Tabs';
+import TabSettings from '../tabSettings/TabSettings';
 
 import okihome from '../reducers'
 
@@ -48,6 +49,7 @@ class App extends Component {
                 <Route path="help" component={Help}/>
                 <Route path="settings" component={Settings}/>
                 <Route path="tabs/:tabId" component={Tabs}/>
+                <Route path="tabs/:tabId/settings" component={TabSettings}/>
             </Route>
           </Router>
         </OidcProvider>

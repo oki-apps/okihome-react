@@ -16,6 +16,14 @@ export const ADD_TAB_REQUEST = 'ADD_TAB_REQUEST'
 export const ADD_TAB_SUCCESS = 'ADD_TAB_SUCCESS'
 export const ADD_TAB_FAILURE = 'ADD_TAB_FAILURE'
 
+export const UPDATE_TAB_REQUEST = 'UPDATE_TAB_REQUEST'
+export const UPDATE_TAB_SUCCESS = 'UPDATE_TAB_SUCCESS'
+export const UPDATE_TAB_FAILURE = 'UPDATE_TAB_FAILURE'
+
+export const DELETE_TAB_REQUEST = 'DELETE_TAB_REQUEST'
+export const DELETE_TAB_SUCCESS = 'DELETE_TAB_SUCCESS'
+export const DELETE_TAB_FAILURE = 'DELETE_TAB_FAILURE'
+
 let getToken = (getState) => {
   let state = getState();
   if(state && state.oidc && state.oidc.user) {
@@ -90,4 +98,22 @@ export const addTab = (tabTitle) => createAction(
   (token) => api.addTab(token,tabTitle),
   true,
   tabTitle
+);
+
+export const updateTab = (tabId, tabTitle) => createAction(
+  UPDATE_TAB_REQUEST,
+  UPDATE_TAB_SUCCESS,
+  UPDATE_TAB_FAILURE,
+  (token) => api.updateTab(token,tabId,tabTitle),
+  true,
+  tabId
+);
+
+export const deleteTab = (tabId) => createAction(
+  DELETE_TAB_REQUEST,
+  DELETE_TAB_SUCCESS,
+  DELETE_TAB_FAILURE,
+  (token) => api.deleteTab(token,tabId),
+  true,
+  tabId
 );
