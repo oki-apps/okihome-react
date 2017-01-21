@@ -11,16 +11,36 @@ import { getApiVersion, getAllTabs } from '../reducers'
 
 import { Link } from 'react-router'
 
-class BasicNavbar extends Component {
+class Navbar extends Component {
   constructor(props) {
     super(props);
     this.handleNewTabSubmit = this.handleNewTabSubmit.bind(this);
     this.handleNewTabClick = this.handleNewTabClick.bind(this);
   }
+
+  componentDidMount() {
+    this.props.fetchVersion();
+  }
+
+  componentDidUpdate(prevProps) {
+    let prevSub = null;
+    if (prevProps.oidc && prevProps.oidc.user && prevProps.oidc.user.profile) {
+      prevSub = prevProps.oidc.user.profile.sub;
+    }
+    let currentSub = null;
+    if (this.props.oidc && this.props.oidc.user && this.props.oidc.user.profile) {
+      currentSub = this.props.oidc.user.profile.sub;
+    }
+    if(currentSub !== prevSub && currentSub) {
+      this.props.fetchUser(currentSub);
+    }
+  }
+
   handleNewTabSubmit(event) {
     this.props.onNewTabClick(event, this.inputNewTabTitle.value);
     event.preventDefault();
   }
+
   handleNewTabClick(event) {
     this.props.onNewTabClick(event, this.inputNewTabTitle.value);
   }
@@ -96,30 +116,6 @@ class BasicNavbar extends Component {
   }
 }
 
-class ActiveNavbar extends Component {
-  componentDidMount() {
-    this.props.dispatch(fetchVersion());
-  }
-
-  componentDidUpdate(prevProps) {
-    let prevSub = null;
-    if (prevProps.oidc && prevProps.oidc.user && prevProps.oidc.user.profile) {
-      prevSub = prevProps.oidc.user.profile.sub;
-    }
-    let currentSub = null;
-    if (this.props.oidc && this.props.oidc.user && this.props.oidc.user.profile) {
-      currentSub = this.props.oidc.user.profile.sub;
-    }
-    if(currentSub !== prevSub && currentSub) {
-      this.props.dispatch(fetchUser(currentSub));
-    }
-  }
-
-  render() {
-    return <BasicNavbar {...this.props} />;
-  }
-}
-
 const mapStateToProps = (state) => ({
   tabs: getAllTabs(state),
   apiVersion: getApiVersion(state),
@@ -127,7 +123,12 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  dispatch: dispatch,
+  fetchUser: (userId) =>{
+     dispatch(fetchUser(userId))
+  },
+  fetchVersion: () =>{
+     dispatch(fetchVersion())
+  },
   onLoginClick : (event) => {
     event.preventDefault();
     userManager.signinRedirect({ data: {
@@ -145,5 +146,5 @@ const mapDispatchToProps = (dispatch) => ({
   }
 })
 
-const Navbar = connect(mapStateToProps,mapDispatchToProps)(ActiveNavbar)
+Navbar = connect(mapStateToProps,mapDispatchToProps)(Navbar)
 export default Navbar;

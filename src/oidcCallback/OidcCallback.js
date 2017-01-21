@@ -6,7 +6,7 @@ import { push } from 'react-router-redux';
 class Callback extends React.Component {
   successCallback = (user) => {
     const urlBeforeRedirection = user.state.redirectUrl || '/';
-    this.props.dispatch(push(urlBeforeRedirection));
+    this.props.redirect(urlBeforeRedirection);
   }
 
   render() {
@@ -18,7 +18,7 @@ class Callback extends React.Component {
 
 function mapDispatchToProps(dispatch) {
   return {
-    dispatch
+    redirect : (url) => dispatch(push(url))
   };
 }
 
