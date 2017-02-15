@@ -31,12 +31,12 @@ class Tabs extends Component {
             <div className="row">
               <div className="col-lg-6">{
                 widgets[0].map(widget => (
-                  <Widget key={widget.id} id={widget.id} config={widget.config} />
+                  <Widget key={widget.id} id={widget.id} tabId={this.props.params.tabId} widgetType={widget.widgetType} config={widget.config} />
                 ))
               }</div>
               <div className="col-lg-6">{
                 widgets[1].map(widget => (
-                  <Widget key={widget.id} id={widget.id} config={widget.config} />
+                  <Widget key={widget.id} id={widget.id} tabId={this.props.params.tabId} widgetType={widget.widgetType} config={widget.config} />
                 ))
               }</div>
             </div>
@@ -45,12 +45,12 @@ class Tabs extends Component {
             <div className="row">
               <div className="col-lg-6">{
                 widgets[2].map(widget => (
-                  <Widget key={widget.id} id={widget.id} config={widget.config} />
+                  <Widget key={widget.id} id={widget.id} tabId={this.props.params.tabId} widgetType={widget.widgetType} config={widget.config} />
                 ))
               }</div>
               <div className="col-lg-6">{
                 widgets[3].map(widget => (
-                  <Widget key={widget.id} id={widget.id} config={widget.config} />
+                  <Widget key={widget.id} id={widget.id} tabId={this.props.params.tabId} widgetType={widget.widgetType} config={widget.config} />
                 ))
               }</div>
             </div>

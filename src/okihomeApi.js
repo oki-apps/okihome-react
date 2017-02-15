@@ -27,6 +27,18 @@ export const deleteTab = function(token, tabId){
 return request(token,config.baseApi+'/tabs/'+tabId,'DELETE')
 };
 
+export const getFeedItems = function(token, userId, feedId) {
+  return request(token,config.baseApi+'/users/'+userId+'/feeds/'+feedId+'/items')
+}
+
+export const readFeedItems = function(token, userId, feedId, itemGuids) {
+  return request(token,config.baseApi+'/users/'+userId+'/feeds/'+feedId, 'POST', {guids: itemGuids})
+}
+
+export const saveWidgetConfig = function(token, tabId, widgetId, data) {
+  return request(token,config.baseApi+'/tabs/'+tabId+'/widgets/'+widgetId, 'POST',data)
+}
+
 // a request helper which reads the access_token from the redux state and passes it in its HTTP request
 export default function request(token, url, method = 'GET', bodyObject = null) {
   const headers = new Headers();

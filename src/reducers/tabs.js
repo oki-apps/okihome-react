@@ -6,8 +6,9 @@ import { FETCH_TAB_SUCCESS, FETCH_TAB_FAILURE, FETCH_TAB_REQUEST } from '../acti
 import { ADD_TAB_SUCCESS } from '../actions'
 import { UPDATE_TAB_SUCCESS } from '../actions'
 import { DELETE_TAB_SUCCESS } from '../actions'
+import { UPDATE_WIDGETCONFIG_SUCCESS } from '../actions'
 
-function all(state = [], action) {
+function tabsConfig(state = [], action) {
   switch (action.type) {
     case UPDATE_TAB_SUCCESS:
       const newState = state.map(t => {
@@ -40,6 +41,65 @@ function all(state = [], action) {
   }
 }
 
+function columnsById(state = {}, action) {
+  switch (action.type) {
+    case DELETE_TAB_SUCCESS:
+      const newState = {...state}
+      delete newState[action.data];
+      return newState
+    case FETCH_TAB_SUCCESS:
+    case ADD_TAB_SUCCESS:
+      const nextState = {...state}
+      const columns = action.response.widgets.map((wc) => {
+        return wc.map((w) => w.id)
+      })
+      nextState[action.response.id] = columns;
+      return nextState
+    case FETCH_TAB_REQUEST:
+    case FETCH_TAB_FAILURE:
+      return state;
+    default:
+      return state;
+  }
+}
+
+function widgetById(state = {}, action) {
+  switch (action.type) {
+    case UPDATE_WIDGETCONFIG_SUCCESS:
+    {
+      const nextState = {...state}
+      const widgets = {...nextState[action.data.tabId]}
+      widgets[action.data.widgetId] = action.response;
+      nextState[action.data.tabId] = widgets;
+      return nextState
+    }
+    case DELETE_TAB_SUCCESS:
+    {
+      const newState = {...state}
+      delete newState[action.data];
+      return newState
+    }
+    case FETCH_TAB_SUCCESS:
+    case ADD_TAB_SUCCESS:
+    {
+      const nextState = {...state}
+      const widgets = {}
+      action.response.widgets.forEach((col) => {
+        col.forEach((w) => {
+          widgets[w.id] = w
+        })
+      });
+      nextState[action.response.id] = widgets;
+      return nextState
+    }
+    case FETCH_TAB_REQUEST:
+    case FETCH_TAB_FAILURE:
+      return state;
+    default:
+      return state;
+  }
+}
+
 function widgetsById(state = {}, action) {
   switch (action.type) {
     case DELETE_TAB_SUCCESS:
@@ -60,13 +120,21 @@ function widgetsById(state = {}, action) {
 }
 
 const tabs = combineReducers({
-    widgetsById,
-    all,
+    columnsById,
+    widgetById,
+    tabsConfig,
 });
 
 export default tabs;
 
 export const reducer = tabs;
-export const getAll = (state) => state.all;
-export const getTab = (state, id) => state.all.find((tab) => tab.id==id);
-export const getWidgets = (state, id) => state.widgetsById ? state.widgetsById[id] : [];
+export const getAll = (state) => state.tabsConfig;
+export const getTab = (state, id) => state.tabsConfig.find((tab) => tab.id==id);
+export const getWidgets = (state, id) => {
+  if(state.columnsById && state.widgetById) {
+    if(id in state.columnsById && id in state.widgetById) {
+      return state.columnsById[id].map((c) => c.map((widgetId) => state.widgetById[id][widgetId]))
+    }
+  }
+  return [[],[],[],[]];
+}

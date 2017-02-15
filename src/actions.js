@@ -24,6 +24,18 @@ export const DELETE_TAB_REQUEST = 'DELETE_TAB_REQUEST'
 export const DELETE_TAB_SUCCESS = 'DELETE_TAB_SUCCESS'
 export const DELETE_TAB_FAILURE = 'DELETE_TAB_FAILURE'
 
+export const FETCH_FEEDITEMS_REQUEST = 'FETCH_FEEDITEMS_REQUEST'
+export const FETCH_FEEDITEMS_SUCCESS = 'FETCH_FEEDITEMS_SUCCESS'
+export const FETCH_FEEDITEMS_FAILURE = 'FETCH_FEEDITEMS_FAILURE'
+
+export const READ_FEEDITEMS_REQUEST = 'READ_FEEDITEMS_REQUEST'
+export const READ_FEEDITEMS_SUCCESS = 'READ_FEEDITEMS_SUCCESS'
+export const READ_FEEDITEMS_FAILURE = 'READ_FEEDITEMS_FAILURE'
+
+export const UPDATE_WIDGETCONFIG_REQUEST = 'UPDATE_WIDGETCONFIG_REQUEST'
+export const UPDATE_WIDGETCONFIG_SUCCESS = 'UPDATE_WIDGETCONFIG_SUCCESS'
+export const UPDATE_WIDGETCONFIG_FAILURE = 'UPDATE_WIDGETCONFIG_FAILURE'
+
 let getToken = (getState) => {
   let state = getState();
   if(state && state.oidc && state.oidc.user) {
@@ -116,4 +128,42 @@ export const deleteTab = (tabId) => createAction(
   (token) => api.deleteTab(token,tabId),
   true,
   tabId
+);
+
+export const fetchFeedItems = (userId, feedId) => createAction(
+  FETCH_FEEDITEMS_REQUEST,
+  FETCH_FEEDITEMS_SUCCESS,
+  FETCH_FEEDITEMS_FAILURE,
+  (token) => api.getFeedItems(token, userId, feedId),
+  true,
+  {
+    userId,
+    feedId
+  }
+);
+
+export const readFeedItems = (userId, feedId, itemGuids) => createAction(
+  READ_FEEDITEMS_REQUEST,
+  READ_FEEDITEMS_SUCCESS,
+  READ_FEEDITEMS_FAILURE,
+  (token) => api.readFeedItems(token, userId, feedId, itemGuids),
+  true,
+  {
+    userId,
+    feedId,
+    itemGuids
+  }
+);
+
+export const saveWidgetConfig = (tabId, widgetId, data) => createAction(
+  UPDATE_WIDGETCONFIG_REQUEST,
+  UPDATE_WIDGETCONFIG_SUCCESS,
+  UPDATE_WIDGETCONFIG_FAILURE,
+  (token) => api.saveWidgetConfig(token, tabId, widgetId, data),
+  true,
+  {
+    tabId,
+    widgetId,
+    data
+  }
 );
