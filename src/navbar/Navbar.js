@@ -51,7 +51,6 @@ class Navbar extends Component {
     const tabId = isOnTab ? this.props.pathParams.tabId : null;
     const tabs = this.props.tabs || [];
     const tabsUnreadCount = this.props.tabsUnreadCount || {};
-    console.log("Navbar.render tabsUnreadCount", tabsUnreadCount);
     const apiVersion = this.props.apiVersion;
     const displayName = this.props.oidc.user ? this.props.oidc.user.profile.name : '';
         
