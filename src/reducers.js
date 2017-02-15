@@ -25,4 +25,30 @@ export const isFetchingApiVersion = (state) => state ? version.getIsFetching(sta
 export const getFeedItems = (state, userId, feedId) => state ? feeds.getItems(state.feeds, userId, feedId) : [];
 
 
+export const getUnreadCountPerTab = (state) => {
+  if(!state) {
+    return state
+  }
+
+  const userId = getUserId(state);
+  const feedsPerTab = tabs.getFeedListPerTab(state.tabs)
+
+  const unreadCount = {};
+  for(let tabId in feedsPerTab) {
+    if (feedsPerTab.hasOwnProperty(tabId)) {
+      unreadCount[tabId] = 0;
+      feedsPerTab[tabId].forEach((feedId) => {
+        getFeedItems(state, userId, feedId).forEach((item) => {
+          if(!item.read) {
+            unreadCount[tabId] += 1;
+          }
+        });
+      });
+    }
+  }
+
+  return unreadCount;
+}
+
+
 export default okihome

@@ -100,25 +100,6 @@ function widgetById(state = {}, action) {
   }
 }
 
-function widgetsById(state = {}, action) {
-  switch (action.type) {
-    case DELETE_TAB_SUCCESS:
-      const newState = {...state}
-      delete newState[action.data];
-      return newState
-    case FETCH_TAB_SUCCESS:
-    case ADD_TAB_SUCCESS:
-      const nextState = {...state}
-      nextState[action.response.id] = action.response.widgets;
-      return nextState
-    case FETCH_TAB_REQUEST:
-    case FETCH_TAB_FAILURE:
-      return state;
-    default:
-      return state;
-  }
-}
-
 const tabs = combineReducers({
     columnsById,
     widgetById,
@@ -137,4 +118,22 @@ export const getWidgets = (state, id) => {
     }
   }
   return [[],[],[],[]];
+}
+export const getFeedListPerTab = (state) => {
+  if(state.tabsConfig) {
+    const allFeeds = {};
+    state.tabsConfig.forEach((t) => {
+      let feeds = [];
+      getWidgets(state, t.id).forEach((c) => {
+        c.forEach((widget) => {
+            if(widget.widgetType === 'feed') {
+              feeds.push(widget.config.feed_id)
+            }
+        })
+      })
+      allFeeds[t.id] = feeds;
+    })
+    return allFeeds;
+  }
+  return {}
 }

@@ -7,7 +7,7 @@ import './Navbar.css';
 import userManager from '../userManager';
 
 import { fetchVersion, fetchUser, addTab } from '../actions'
-import { getApiVersion, getAllTabs } from '../reducers'
+import { getApiVersion, getAllTabs, getUnreadCountPerTab } from '../reducers'
 
 import { Link } from 'react-router'
 
@@ -50,6 +50,8 @@ class Navbar extends Component {
     const isOnTab = (this.props.pathParams && this.props.pathParams.tabId);
     const tabId = isOnTab ? this.props.pathParams.tabId : null;
     const tabs = this.props.tabs || [];
+    const tabsUnreadCount = this.props.tabsUnreadCount || {};
+    console.log("Navbar.render tabsUnreadCount", tabsUnreadCount);
     const apiVersion = this.props.apiVersion;
     const displayName = this.props.oidc.user ? this.props.oidc.user.profile.name : '';
         
@@ -87,7 +89,7 @@ class Navbar extends Component {
             <div className="nav navbar-nav">
             {tabs.map((tab) =>
               <Link key={tab.id} to={"/tabs/"+ tab.id} className="nav-item nav-link" activeClassName="active">
-                {tab.title} <span className="tag tag-default">{tab.unread_count}</span>
+                {tab.title} <span className="tag tag-default">{(tab.id in tabsUnreadCount && tabsUnreadCount[tab.id]>0) ? tabsUnreadCount[tab.id] : undefined}</span>
               </Link>
             )}
               <div className="nav-item dropdown">
@@ -118,6 +120,7 @@ class Navbar extends Component {
 
 const mapStateToProps = (state) => ({
   tabs: getAllTabs(state),
+  tabsUnreadCount: getUnreadCountPerTab(state),
   apiVersion: getApiVersion(state),
   oidc: state.oidc,
 });
