@@ -4,6 +4,10 @@ export const FETCH_VERSION_REQUEST = 'FETCH_VERSION_REQUEST'
 export const FETCH_VERSION_SUCCESS = 'FETCH_VERSION_SUCCESS'
 export const FETCH_VERSION_FAILURE = 'FETCH_VERSION_FAILURE'
 
+export const FETCH_SERVICES_REQUEST = 'FETCH_SERVICES_REQUEST'
+export const FETCH_SERVICES_SUCCESS = 'FETCH_SERVICES_SUCCESS'
+export const FETCH_SERVICES_FAILURE = 'FETCH_SERVICES_FAILURE'
+
 export const FETCH_USER_REQUEST = 'FETCH_USER_REQUEST'
 export const FETCH_USER_SUCCESS = 'FETCH_USER_SUCCESS'
 export const FETCH_USER_FAILURE = 'FETCH_USER_FAILURE'
@@ -35,6 +39,14 @@ export const READ_FEEDITEMS_FAILURE = 'READ_FEEDITEMS_FAILURE'
 export const UPDATE_WIDGETCONFIG_REQUEST = 'UPDATE_WIDGETCONFIG_REQUEST'
 export const UPDATE_WIDGETCONFIG_SUCCESS = 'UPDATE_WIDGETCONFIG_SUCCESS'
 export const UPDATE_WIDGETCONFIG_FAILURE = 'UPDATE_WIDGETCONFIG_FAILURE'
+
+export const FETCH_ACCOUNTS_REQUEST = 'FETCH_ACCOUNTS_REQUEST'
+export const FETCH_ACCOUNTS_SUCCESS = 'FETCH_ACCOUNTS_SUCCESS'
+export const FETCH_ACCOUNTS_FAILURE = 'FETCH_ACCOUNTS_FAILURE'
+
+export const REVOKE_ACCOUNT_REQUEST = 'REVOKE_ACCOUNT_REQUEST'
+export const REVOKE_ACCOUNT_SUCCESS = 'REVOKE_ACCOUNT_SUCCESS'
+export const REVOKE_ACCOUNT_FAILURE = 'REVOKE_ACCOUNT_FAILURE'
 
 let getToken = (getState) => {
   let state = getState();
@@ -87,6 +99,13 @@ export const fetchVersion = () => createAction(
   FETCH_VERSION_FAILURE,
   (token) => api.getVersion(token),
   false
+);
+
+export const fetchServices = () => createAction(
+  FETCH_SERVICES_REQUEST,
+  FETCH_SERVICES_SUCCESS,
+  FETCH_SERVICES_FAILURE,
+  (token) => api.getServices(token),
 );
 
 export const fetchUser = (userId) => createAction(
@@ -165,5 +184,28 @@ export const saveWidgetConfig = (tabId, widgetId, data) => createAction(
     tabId,
     widgetId,
     data
+  }
+);
+
+export const fetchAccounts = (userId) => createAction(
+  FETCH_ACCOUNTS_REQUEST,
+  FETCH_ACCOUNTS_SUCCESS,
+  FETCH_ACCOUNTS_FAILURE,
+  (token) => api.getAccounts(token, userId),
+  true,
+  {
+    userId,
+  }
+);
+
+export const revokeAccount = (userId, accountId) => createAction(
+  REVOKE_ACCOUNT_REQUEST,
+  REVOKE_ACCOUNT_SUCCESS,
+  REVOKE_ACCOUNT_FAILURE,
+  (token) => api.revokeAccount(token, userId, accountId),
+  true,
+  {
+    userId,
+    accountId,
   }
 );
