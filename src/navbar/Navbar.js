@@ -6,7 +6,7 @@ import './Navbar.css';
 
 import userManager from '../userManager';
 
-import { fetchVersion, fetchUser, addTab } from '../actions'
+import { fetchVersion, fetchUser, addTab, addWidget } from '../actions'
 import { getApiVersion, getAllTabs, getUnreadCountPerTab } from '../reducers'
 
 import { Link } from 'react-router'
@@ -16,6 +16,8 @@ class Navbar extends Component {
     super(props);
     this.handleNewTabSubmit = this.handleNewTabSubmit.bind(this);
     this.handleNewTabClick = this.handleNewTabClick.bind(this);
+    this.handleAddFeedSubmit = this.handleAddFeedSubmit.bind(this);
+    this.handleAddFeedClick = this.handleAddFeedClick.bind(this);
   }
 
   componentDidMount() {
@@ -45,6 +47,17 @@ class Navbar extends Component {
     this.props.onNewTabClick(event, this.inputNewTabTitle.value);
   }
 
+  handleAddFeedSubmit(event) {
+    const tabId = (this.props.pathParams && this.props.pathParams.tabId) ? this.props.pathParams.tabId : null;
+    this.props.onAddFeedClick(event, tabId, this.inputAddFeedUrl.value);
+    event.preventDefault();
+  }
+
+  handleAddFeedClick(event) {
+    const tabId = (this.props.pathParams && this.props.pathParams.tabId) ? this.props.pathParams.tabId : null;
+    this.props.onAddFeedClick(event, tabId, this.inputAddFeedUrl.value);
+  }
+
   render() {
     const isLoggedIn = (this.props.oidc.user !== null);
     const isOnTab = (this.props.pathParams && this.props.pathParams.tabId);
@@ -56,11 +69,11 @@ class Navbar extends Component {
         
     return (
       <div>
-        <div className="modal fade" id="exampleModalLong" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+        <div className="modal fade" id="newTabModal" tabIndex="-1" role="dialog" aria-labelledby="newTabModalTitle" aria-hidden="true">
           <div className="modal-dialog" role="document">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title" id="exampleModalLongTitle"><i className="fa fa-plus-circle fa-fw"></i> New tab</h5>
+                <h5 className="modal-title" id="newTabModalTitle"><i className="fa fa-plus-circle fa-fw"></i> New tab</h5>
               </div>
               <div className="modal-body">
                 <form onSubmit={this.handleNewTabClick}>
@@ -73,6 +86,29 @@ class Navbar extends Component {
               <div className="modal-footer">
                 <div className="btn-group" role="group" aria-label="Actions">
                   <button type="button" className="btn btn-primary" onClick={this.handleNewTabClick} data-dismiss="modal">OK</button>
+                  <button type="button" className="btn btn-warning" data-dismiss="modal">Cancel</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="modal fade" id="addFeedModal" tabIndex="-1" role="dialog" aria-labelledby="addFeedModalTitle" aria-hidden="true">
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title" id="addFeedModalTitle"><i className="fa fa-envelope-o fa-fw"></i> Add feed</h5>
+              </div>
+              <div className="modal-body">
+                <form onSubmit={this.handleAddFeedClick}>
+                  <div className="form-group">
+                    <label htmlFor="inputURL">Feed URL</label>
+                    <input type="text" className="form-control" id="inputURL" placeholder="URL" autoFocus ref={(input) => this.inputAddFeedUrl = input} />
+                  </div>
+                </form>
+              </div>
+              <div className="modal-footer">
+                <div className="btn-group" role="group" aria-label="Actions">
+                  <button type="button" className="btn btn-primary" onClick={this.handleAddFeedClick} data-dismiss="modal">OK</button>
                   <button type="button" className="btn btn-warning" data-dismiss="modal">Cancel</button>
                 </div>
               </div>
@@ -96,10 +132,10 @@ class Navbar extends Component {
                   <i className="fa fa-plus fa-fw"></i>
                 </a>
                 <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  {isOnTab ? <a className="dropdown-item" href="#"><i className="fa fa-rss fa-fw"></i> Add feed</a> : null }
+                  {isOnTab ? <a className="dropdown-item" href="#" data-toggle="modal" data-target="#addFeedModal"><i className="fa fa-rss fa-fw"></i> Add feed</a> : null }
                   {isOnTab ? <a className="dropdown-item" href="#"><i className="fa fa-envelope-o fa-fw"></i> Add email</a> : null }
                   {isOnTab ? <div className="dropdown-divider"></div> : null }
-                  <a className="dropdown-item" href="#" data-toggle="modal" data-target="#exampleModalLong"><i className="fa fa-plus-circle fa-fw"></i> New tab</a>
+                  <a className="dropdown-item" href="#" data-toggle="modal" data-target="#newTabModal"><i className="fa fa-plus-circle fa-fw"></i> New tab</a>
                 </div>
               </div>
             </div>
@@ -145,7 +181,17 @@ const mapDispatchToProps = (dispatch) => ({
   },
   onNewTabClick : (event, userId, newTabTitle) => {
     dispatch(addTab(userId, newTabTitle));
-  }
+  },
+  onAddFeedClick : (event, tabId, feedURL) => {
+    let widget = {
+      widgetType: 'feed',
+      config: {
+        url: feedURL,
+        display_count: 5
+      }
+    };
+    dispatch(addWidget(tabId, widget));
+  },
 })
 
 Navbar = connect(mapStateToProps,mapDispatchToProps)(Navbar)

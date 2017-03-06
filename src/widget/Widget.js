@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import Settings from '../widget/Settings';
 import Feed from '../widget/Feed';
 
-import { fetchFeedItems, readFeedItems, saveWidgetConfig } from '../actions'
+import { fetchFeedItems, readFeedItems, saveWidgetConfig, deleteWidget } from '../actions'
 import { getUserId, getFeedItems } from '../reducers'
 
 class Widget extends Component {
@@ -20,6 +20,7 @@ class Widget extends Component {
     this.onRefresh = this.onRefresh.bind(this);
     this.onMarkAllRead = this.onMarkAllRead.bind(this);
     this.onSettingsSave = this.onSettingsSave.bind(this);
+    this.onDelete = this.onDelete.bind(this);
   }
 
   previousClick(e) {
@@ -60,6 +61,10 @@ class Widget extends Component {
     });
     this.props.onSettingsSave(e, newTitle, newDisplayCount);
   }
+
+  onDelete(e) {
+    this.props.onDelete(e);
+  }
   
   render() {
     const widgetType = this.props.widgetType;
@@ -93,6 +98,7 @@ class Widget extends Component {
               {allowMarkAllRead ? <button type="button" className="btn btn-secondary" onClick={this.onMarkAllRead} ><span className="fa fa-envelope-open-o" aria-hidden="true"></span></button> : null }
               {widgetType === "feed" ? <button type="button" className="btn btn-secondary" onClick={this.onRefresh} ><span className="fa fa-refresh" aria-hidden="true"></span></button> : null }
               <button type="button" className="btn btn-secondary" onClick={this.settingsClick} ><span className="fa fa-cog" aria-hidden="true"></span></button>
+              <button type="button" className="btn btn-secondary" onClick={this.onDelete} ><span className="fa fa-trash" aria-hidden="true"></span></button>
             </div>
           </div>
         </div>
@@ -118,6 +124,7 @@ const mapStateToProps = (state, ownProps) => {
   switch(ownProps.widgetType) {
     case "feed":
       items = getFeedItems(state, userId, ownProps.config.feed_id)
+      break
   }
 
   return {
@@ -131,6 +138,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     switch(widgetType) {
       case "feed":
         dispatch(fetchFeedItems(userId, config.feed_id))
+        break
     }
   },
   onFeedItemClick : (event, guid, userId) => {
@@ -145,6 +153,10 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       title: newTitle,
       display_count: parseInt(newDisplayCount,10),
     }))
+  },
+  onDelete: (event) => {
+    console.log("onDelete", ownProps)
+    dispatch(deleteWidget(ownProps.tabId, ownProps.id))
   }
 });
 

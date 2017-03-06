@@ -7,6 +7,8 @@ import { ADD_TAB_SUCCESS } from '../actions'
 import { UPDATE_TAB_SUCCESS } from '../actions'
 import { DELETE_TAB_SUCCESS } from '../actions'
 import { UPDATE_WIDGETCONFIG_SUCCESS } from '../actions'
+import { ADD_WIDGET_SUCCESS } from '../actions'
+import { DELETE_WIDGET_SUCCESS } from '../actions'
 
 function tabsConfig(state = [], action) {
   switch (action.type) {
@@ -43,18 +45,49 @@ function tabsConfig(state = [], action) {
 
 function columnsById(state = {}, action) {
   switch (action.type) {
+    case DELETE_WIDGET_SUCCESS:
+    {
+      const nextState = {...state}
+      const columns = [...nextState[action.data.tabId]]
+
+      for(let i=0; i<columns.length; i++) {
+        const idx = columns[i].indexOf(action.data.widgetId);
+        if(idx !== -1) {
+          let newColumn = [...columns[i]]
+          newColumn.splice(idx,1)
+          columns[i] = newColumn
+        }
+      }
+      
+      nextState[action.data.tabId] = columns
+      return nextState
+    }
+    case ADD_WIDGET_SUCCESS:
+    {
+      const nextState = {...state}
+      const columns = [...nextState[action.data.tabId]]
+
+      let widgetIds = [...columns[0]]
+      widgetIds.push(action.response.id);
+      columns[0] = widgetIds
+
+      nextState[action.data.tabId] = columns
+      return nextState
+    }
     case DELETE_TAB_SUCCESS:
       const newState = {...state}
       delete newState[action.data];
       return newState
     case FETCH_TAB_SUCCESS:
     case ADD_TAB_SUCCESS:
+    {
       const nextState = {...state}
       const columns = action.response.widgets.map((wc) => {
         return wc.map((w) => w.id)
       })
       nextState[action.response.id] = columns;
       return nextState
+    }
     case FETCH_TAB_REQUEST:
     case FETCH_TAB_FAILURE:
       return state;
@@ -65,6 +98,22 @@ function columnsById(state = {}, action) {
 
 function widgetById(state = {}, action) {
   switch (action.type) {
+    case DELETE_WIDGET_SUCCESS:
+    {
+      const nextState = {...state}
+      const widgets = {...nextState[action.data.tabId]}
+      delete widgets[action.data.widgetId]
+      nextState[action.data.tabId] = widgets
+      return nextState
+    }
+    case ADD_WIDGET_SUCCESS:
+    {
+      const nextState = {...state}
+      const widgets = {...nextState[action.data.tabId]}
+      widgets[action.response.id] = action.response;
+      nextState[action.data.tabId] = widgets;
+      return nextState
+    }
     case UPDATE_WIDGETCONFIG_SUCCESS:
     {
       const nextState = {...state}

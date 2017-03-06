@@ -64,8 +64,16 @@ export const readFeedItems = function(token, userId, feedId, itemGuids) {
   return request(token,config.baseApi+'/users/'+userId+'/feeds/'+feedId, 'POST', {guids: itemGuids})
 };
 
+export const addWidget = function(token, tabId, widget){
+return request(token,config.baseApi+'/tabs/'+tabId+'/widgets','POST',widget)
+};
+
 export const saveWidgetConfig = function(token, tabId, widgetId, data) {
-  return request(token,config.baseApi+'/tabs/'+tabId+'/widgets/'+widgetId, 'POST',data)
+  return request(token,config.baseApi+'/tabs/'+tabId+'/widgets/'+widgetId, 'POST', data)
+};
+
+export const deleteWidget = function(token, tabId, widgetId) {
+  return request(token,config.baseApi+'/tabs/'+tabId+'/widgets/'+widgetId, 'DELETE')
 };
 
 export const getAccounts = function(token, userId) {

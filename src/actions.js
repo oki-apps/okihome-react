@@ -36,9 +36,17 @@ export const READ_FEEDITEMS_REQUEST = 'READ_FEEDITEMS_REQUEST'
 export const READ_FEEDITEMS_SUCCESS = 'READ_FEEDITEMS_SUCCESS'
 export const READ_FEEDITEMS_FAILURE = 'READ_FEEDITEMS_FAILURE'
 
+export const ADD_WIDGET_REQUEST = 'ADD_WIDGET_REQUEST'
+export const ADD_WIDGET_SUCCESS = 'ADD_WIDGET_SUCCESS'
+export const ADD_WIDGET_FAILURE = 'ADD_WIDGET_FAILURE'
+
 export const UPDATE_WIDGETCONFIG_REQUEST = 'UPDATE_WIDGETCONFIG_REQUEST'
 export const UPDATE_WIDGETCONFIG_SUCCESS = 'UPDATE_WIDGETCONFIG_SUCCESS'
 export const UPDATE_WIDGETCONFIG_FAILURE = 'UPDATE_WIDGETCONFIG_FAILURE'
+
+export const DELETE_WIDGET_REQUEST = 'DELETE_WIDGET_REQUEST'
+export const DELETE_WIDGET_SUCCESS = 'DELETE_WIDGET_SUCCESS'
+export const DELETE_WIDGET_FAILURE = 'DELETE_WIDGET_FAILURE'
 
 export const FETCH_ACCOUNTS_REQUEST = 'FETCH_ACCOUNTS_REQUEST'
 export const FETCH_ACCOUNTS_SUCCESS = 'FETCH_ACCOUNTS_SUCCESS'
@@ -157,7 +165,7 @@ export const fetchFeedItems = (userId, feedId) => createAction(
   true,
   {
     userId,
-    feedId
+    feedId,
   }
 );
 
@@ -170,8 +178,20 @@ export const readFeedItems = (userId, feedId, itemGuids) => createAction(
   {
     userId,
     feedId,
-    itemGuids
+    itemGuids,
   }
+);
+
+export const addWidget = (tabId, widget) => createAction(
+  ADD_WIDGET_REQUEST,
+  ADD_WIDGET_SUCCESS,
+  ADD_WIDGET_FAILURE,
+  (token) => api.addWidget(token,tabId,widget),
+  true,
+  {
+    tabId,
+    widget,
+  },
 );
 
 export const saveWidgetConfig = (tabId, widgetId, data) => createAction(
@@ -183,8 +203,20 @@ export const saveWidgetConfig = (tabId, widgetId, data) => createAction(
   {
     tabId,
     widgetId,
-    data
+    data,
   }
+);
+
+export const deleteWidget = (tabId, widgetId) => createAction(
+  DELETE_WIDGET_REQUEST,
+  DELETE_WIDGET_SUCCESS,
+  DELETE_WIDGET_FAILURE,
+  (token) => api.deleteWidget(token,tabId,widgetId),
+  true,
+  {
+    tabId,
+    widgetId,
+  },
 );
 
 export const fetchAccounts = (userId) => createAction(
