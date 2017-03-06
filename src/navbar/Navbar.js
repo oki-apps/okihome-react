@@ -4,6 +4,9 @@ import { push } from 'react-router-redux'
 import logo from './okihome24.png'
 import './Navbar.css';
 
+import NewTabModal from './NewTabModal';
+import AddFeedModal from './AddFeedModal';
+
 import userManager from '../userManager';
 
 import { fetchVersion, fetchUser, addTab, addWidget } from '../actions'
@@ -14,10 +17,6 @@ import { Link } from 'react-router'
 class Navbar extends Component {
   constructor(props) {
     super(props);
-    this.handleNewTabSubmit = this.handleNewTabSubmit.bind(this);
-    this.handleNewTabClick = this.handleNewTabClick.bind(this);
-    this.handleAddFeedSubmit = this.handleAddFeedSubmit.bind(this);
-    this.handleAddFeedClick = this.handleAddFeedClick.bind(this);
   }
 
   componentDidMount() {
@@ -38,26 +37,6 @@ class Navbar extends Component {
     }
   }
 
-  handleNewTabSubmit(event) {
-    this.props.onNewTabClick(event, this.inputNewTabTitle.value);
-    event.preventDefault();
-  }
-
-  handleNewTabClick(event) {
-    this.props.onNewTabClick(event, this.inputNewTabTitle.value);
-  }
-
-  handleAddFeedSubmit(event) {
-    const tabId = (this.props.pathParams && this.props.pathParams.tabId) ? this.props.pathParams.tabId : null;
-    this.props.onAddFeedClick(event, tabId, this.inputAddFeedUrl.value);
-    event.preventDefault();
-  }
-
-  handleAddFeedClick(event) {
-    const tabId = (this.props.pathParams && this.props.pathParams.tabId) ? this.props.pathParams.tabId : null;
-    this.props.onAddFeedClick(event, tabId, this.inputAddFeedUrl.value);
-  }
-
   render() {
     const isLoggedIn = (this.props.oidc.user !== null);
     const isOnTab = (this.props.pathParams && this.props.pathParams.tabId);
@@ -69,52 +48,8 @@ class Navbar extends Component {
         
     return (
       <div>
-        <div className="modal fade" id="newTabModal" tabIndex="-1" role="dialog" aria-labelledby="newTabModalTitle" aria-hidden="true">
-          <div className="modal-dialog" role="document">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title" id="newTabModalTitle"><i className="fa fa-plus-circle fa-fw"></i> New tab</h5>
-              </div>
-              <div className="modal-body">
-                <form onSubmit={this.handleNewTabClick}>
-                  <div className="form-group">
-                    <label htmlFor="inputTitle">Title</label>
-                    <input type="text" className="form-control" id="inputTitle" placeholder="Tab title" autoFocus ref={(input) => this.inputNewTabTitle = input} />
-                  </div>
-                </form>
-              </div>
-              <div className="modal-footer">
-                <div className="btn-group" role="group" aria-label="Actions">
-                  <button type="button" className="btn btn-primary" onClick={this.handleNewTabClick} data-dismiss="modal">OK</button>
-                  <button type="button" className="btn btn-warning" data-dismiss="modal">Cancel</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="modal fade" id="addFeedModal" tabIndex="-1" role="dialog" aria-labelledby="addFeedModalTitle" aria-hidden="true">
-          <div className="modal-dialog" role="document">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title" id="addFeedModalTitle"><i className="fa fa-envelope-o fa-fw"></i> Add feed</h5>
-              </div>
-              <div className="modal-body">
-                <form onSubmit={this.handleAddFeedClick}>
-                  <div className="form-group">
-                    <label htmlFor="inputURL">Feed URL</label>
-                    <input type="text" className="form-control" id="inputURL" placeholder="URL" autoFocus ref={(input) => this.inputAddFeedUrl = input} />
-                  </div>
-                </form>
-              </div>
-              <div className="modal-footer">
-                <div className="btn-group" role="group" aria-label="Actions">
-                  <button type="button" className="btn btn-primary" onClick={this.handleAddFeedClick} data-dismiss="modal">OK</button>
-                  <button type="button" className="btn btn-warning" data-dismiss="modal">Cancel</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <NewTabModal onNewTabClick={this.props.onNewTabClick} />
+        {isOnTab ? <AddFeedModal tabId={tabId} onAddFeedClick={this.props.onAddFeedClick} /> : null }
         <nav className="navbar navbar-fixed-top navbar-light bg-faded">
           <Link to="/" className="navbar-brand" activeClassName="active">
             <img src={logo} width="24" height="24" className="align-baseline" alt="" />{' '}
