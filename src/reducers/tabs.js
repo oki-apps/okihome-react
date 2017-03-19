@@ -9,6 +9,7 @@ import { DELETE_TAB_SUCCESS } from '../actions'
 import { UPDATE_WIDGETCONFIG_SUCCESS } from '../actions'
 import { ADD_WIDGET_SUCCESS } from '../actions'
 import { DELETE_WIDGET_SUCCESS } from '../actions'
+import { SAVE_TABLAYOUT_SUCCESS } from '../actions'
 
 function tabsConfig(state = [], action) {
   switch (action.type) {
@@ -45,6 +46,12 @@ function tabsConfig(state = [], action) {
 
 function columnsById(state = {}, action) {
   switch (action.type) {
+    case SAVE_TABLAYOUT_SUCCESS:
+    {
+      const nextState = {...state}
+      nextState[action.data.tabId] = action.response
+      return nextState
+    }
     case DELETE_WIDGET_SUCCESS:
     {
       const nextState = {...state}

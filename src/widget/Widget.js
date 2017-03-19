@@ -22,6 +22,11 @@ class Widget extends Component {
     this.onMarkAllRead = this.onMarkAllRead.bind(this);
     this.onSettingsSave = this.onSettingsSave.bind(this);
     this.onDelete = this.onDelete.bind(this);
+    this.onUp = this.onUp.bind(this);
+    this.onDown = this.onDown.bind(this);
+    this.onLeft = this.onLeft.bind(this);
+    this.onRight = this.onRight.bind(this);
+    this.onMove = this.onMove.bind(this);
   }
 
   previousClick(e) {
@@ -66,6 +71,26 @@ class Widget extends Component {
   onDelete(e) {
     this.props.onDelete(e);
   }
+
+  onMove(e, direction) {
+    this.props.requestMove(this.props.tabId, this.props.id, direction)
+  }
+
+  onUp(e) {
+    this.onMove(e, "UP");
+  }
+
+  onDown(e) {
+    this.onMove(e, "DOWN");
+  }
+
+  onLeft(e) {
+    this.onMove(e, "LEFT");
+  }
+
+  onRight(e) {
+    this.onMove(e, "RIGHT");
+  }
   
   render() {
     const widgetType = this.props.widgetType;
@@ -105,6 +130,10 @@ class Widget extends Component {
                 <ul className="dropdown-menu" aria-labelledby="dropdownWidget">
                   <li><a href="#" className="dropdown-item" onClick={this.settingsClick} ><span className="fa fa-cog" aria-hidden="true"></span> Settings</a></li>
                   <li><a href="#" className="dropdown-item" onClick={this.onDelete} ><span className="fa fa-trash" aria-hidden="true"></span> Delete</a></li>
+                  <li><a href="#" className="dropdown-item" onClick={this.onUp} ><span className="fa fa-arrow-up" aria-hidden="true"></span> Up</a></li>
+                  <li><a href="#" className="dropdown-item" onClick={this.onDown} ><span className="fa fa-arrow-down" aria-hidden="true"></span> Down</a></li>
+                  <li><a href="#" className="dropdown-item" onClick={this.onLeft} ><span className="fa fa-arrow-left" aria-hidden="true"></span> Left</a></li>
+                  <li><a href="#" className="dropdown-item" onClick={this.onRight} ><span className="fa fa-arrow-right" aria-hidden="true"></span> Right</a></li>
                 </ul>
               </div>
             </div>

@@ -28,6 +28,10 @@ export const DELETE_TAB_REQUEST = 'DELETE_TAB_REQUEST'
 export const DELETE_TAB_SUCCESS = 'DELETE_TAB_SUCCESS'
 export const DELETE_TAB_FAILURE = 'DELETE_TAB_FAILURE'
 
+export const SAVE_TABLAYOUT_REQUEST = 'SAVE_TABLAYOUT_REQUEST'
+export const SAVE_TABLAYOUT_SUCCESS = 'SAVE_TABLAYOUT_SUCCESS'
+export const SAVE_TABLAYOUT_FAILURE = 'SAVE_TABLAYOUT_FAILURE'
+
 export const FETCH_FEEDITEMS_REQUEST = 'FETCH_FEEDITEMS_REQUEST'
 export const FETCH_FEEDITEMS_SUCCESS = 'FETCH_FEEDITEMS_SUCCESS'
 export const FETCH_FEEDITEMS_FAILURE = 'FETCH_FEEDITEMS_FAILURE'
@@ -159,6 +163,18 @@ export const deleteTab = (tabId) => createAction(
   (token) => api.deleteTab(token,tabId),
   true,
   tabId
+);
+
+export const saveTabLayout = (tabId,layout) => createAction(
+  SAVE_TABLAYOUT_REQUEST,
+  SAVE_TABLAYOUT_SUCCESS,
+  SAVE_TABLAYOUT_FAILURE,
+  (token) => api.saveTabLayout(token,tabId,layout),
+  true,
+  {
+    tabId,
+    layout,
+  }
 );
 
 export const fetchFeedItems = (userId, feedId) => createAction(

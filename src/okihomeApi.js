@@ -45,7 +45,7 @@ export const getTab = function(token, tabId){
 };
 
 export const addTab = function(token, tabTitle){
-return request(token,config.baseApi+'/tabs','POST',{title: tabTitle})
+  return request(token,config.baseApi+'/tabs','POST',{title: tabTitle})
 };
 
 export const updateTab = function(token, tabId, tabTitle){
@@ -54,6 +54,10 @@ export const updateTab = function(token, tabId, tabTitle){
 
 export const deleteTab = function(token, tabId){
   return request(token,config.baseApi+'/tabs/'+tabId,'DELETE')
+};
+
+export const saveTabLayout = function(token, tabId, layout){
+  return request(token,config.baseApi+'/tabs/'+tabId+'/layout','POST',layout)
 };
 
 export const getFeedItems = function(token, userId, feedId) {
