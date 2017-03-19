@@ -1,8 +1,16 @@
 
-const config = {
-  base : 'http://localhost:8585',
-  baseApi : 'http://localhost:8585/api',
+let config = {
+  base : 'https://api.home.okiapps.com',
+  baseApi : 'https://api.home.okiapps.com/api',
 }
+
+if(process.env.NODE_ENV === "development") {
+  config = {
+    base : 'http://localhost:8585',
+    baseApi : 'http://localhost:8585/api',
+  } 
+}
+console.log("API configuration", config);
 
 const PopupCenter = function($window, $document, url, title, w, h) {
   // Fixes dual-screen position                         Most browsers      Firefox
