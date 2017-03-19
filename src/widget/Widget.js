@@ -3,9 +3,10 @@ import { connect } from 'react-redux'
 
 import Settings from '../widget/Settings';
 import Feed from '../widget/Feed';
+import Email from '../widget/Email';
 
-import { fetchFeedItems, readFeedItems, saveWidgetConfig, deleteWidget } from '../actions'
-import { getUserId, getFeedItems } from '../reducers'
+import { fetchFeedItems, fetchEmailItems, readFeedItems, saveWidgetConfig, deleteWidget } from '../actions'
+import { getUserId, getFeedItems, getEmailItems } from '../reducers'
 
 class Widget extends Component {
 
@@ -96,7 +97,7 @@ class Widget extends Component {
             {unreadCount>0 ? <span className="tag tag-default">{unreadCount}</span> : null}  {' '}
             <div className="btn-group btn-group-sm" role="group" aria-label="Actions">
               {allowMarkAllRead ? <button type="button" className="btn btn-secondary" onClick={this.onMarkAllRead} ><span className="fa fa-envelope-open-o" aria-hidden="true"></span></button> : null }
-              {widgetType === "feed" ? <button type="button" className="btn btn-secondary" onClick={this.onRefresh} ><span className="fa fa-refresh" aria-hidden="true"></span></button> : null }
+              <button type="button" className="btn btn-secondary" onClick={this.onRefresh} ><span className="fa fa-refresh" aria-hidden="true"></span></button>
               <button type="button" className="btn btn-secondary" onClick={this.settingsClick} ><span className="fa fa-cog" aria-hidden="true"></span></button>
               <button type="button" className="btn btn-secondary" onClick={this.onDelete} ><span className="fa fa-trash" aria-hidden="true"></span></button>
             </div>
@@ -105,6 +106,7 @@ class Widget extends Component {
         {settings ? <Settings config={this.props.config} onSave={this.onSettingsSave}/>:
         <div>
         {widgetType === "feed" ? <Feed items={displayedItems} onItemClick={(e, guid) => this.props.onFeedItemClick(e, guid, this.props.userId)} /> : null }
+        {widgetType === "email" ? <Email items={displayedItems} /> : null }
         { hasItemsBefore || hasItemsAfter ? <div className="card-footer clearfix">
           { hasItemsBefore ? <a href="#" onClick={this.previousClick} className="card-link pull-left"><span className="fa fa-angle-double-left" aria-hidden="true"></span> Previous</a> : null }
           { hasItemsAfter ? <a href="#" onClick={this.nextClick} className="card-link pull-right">Next <span className="fa fa-angle-double-right" aria-hidden="true"></span></a> : null }
@@ -125,6 +127,9 @@ const mapStateToProps = (state, ownProps) => {
     case "feed":
       items = getFeedItems(state, userId, ownProps.config.feed_id)
       break
+    case "email":
+      items = getEmailItems(state, userId, ownProps.config.account_id)
+      break
   }
 
   return {
@@ -138,6 +143,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     switch(widgetType) {
       case "feed":
         dispatch(fetchFeedItems(userId, config.feed_id))
+        break
+      case "email":
+        dispatch(fetchEmailItems(userId, config.account_id))
         break
     }
   },

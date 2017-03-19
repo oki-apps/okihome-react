@@ -30,6 +30,7 @@ export const isFetchingApiVersion = (state) => state ? version.getIsFetching(sta
 export const getFeedItems = (state, userId, feedId) => state ? feeds.getItems(state.feeds, userId, feedId) : [];
 export const getServices = (state) => state ? services.getAll(state.services) : [];
 export const getAccounts = (state, userId) => state ? accounts.getAll(state.accounts, userId) : [];
+export const getEmailItems = (state, userId, accountId) => accounts.getEmails(state.accounts, userId, accountId);
 
 
 export const getUnreadCountPerTab = (state) => {

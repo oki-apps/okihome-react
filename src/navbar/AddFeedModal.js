@@ -24,7 +24,7 @@ class AddFeedModal extends Component {
           <div className="modal-dialog" role="document">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title" id="addFeedModalTitle"><i className="fa fa-envelope-o fa-fw"></i> Add feed</h5>
+                <h5 className="modal-title" id="addFeedModalTitle"><i className="fa fa-rss fa-fw"></i> Add feed</h5>
               </div>
               <div className="modal-body">
                 <form onSubmit={this.handleAddFeedClick}>

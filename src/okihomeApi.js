@@ -84,6 +84,10 @@ export const revokeAccount = function(token, userId, accountId) {
   return request(token,config.baseApi+'/users/'+userId+'/accounts/'+accountId, 'DELETE')
 };
 
+export const getEmailItems = function(token, userId, accountId) {
+  return request(token,config.baseApi+'/users/'+userId+'/accounts/'+accountId+'/emails')
+};
+
 // a request helper which reads the access_token from the redux state and passes it in its HTTP request
 export default function request(token, url, method = 'GET', bodyObject = null) {
   const headers = new Headers();

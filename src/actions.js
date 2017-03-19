@@ -56,6 +56,10 @@ export const REVOKE_ACCOUNT_REQUEST = 'REVOKE_ACCOUNT_REQUEST'
 export const REVOKE_ACCOUNT_SUCCESS = 'REVOKE_ACCOUNT_SUCCESS'
 export const REVOKE_ACCOUNT_FAILURE = 'REVOKE_ACCOUNT_FAILURE'
 
+export const FETCH_EMAILITEMS_REQUEST = 'FETCH_EMAILITEMS_REQUEST'
+export const FETCH_EMAILITEMS_SUCCESS = 'FETCH_EMAILITEMS_SUCCESS'
+export const FETCH_EMAILITEMS_FAILURE = 'FETCH_EMAILITEMS_FAILURE'
+
 let getToken = (getState) => {
   let state = getState();
   if(state && state.oidc && state.oidc.user) {
@@ -235,6 +239,18 @@ export const revokeAccount = (userId, accountId) => createAction(
   REVOKE_ACCOUNT_SUCCESS,
   REVOKE_ACCOUNT_FAILURE,
   (token) => api.revokeAccount(token, userId, accountId),
+  true,
+  {
+    userId,
+    accountId,
+  }
+);
+
+export const fetchEmailItems = (userId, accountId) => createAction(
+  FETCH_EMAILITEMS_REQUEST,
+  FETCH_EMAILITEMS_SUCCESS,
+  FETCH_EMAILITEMS_FAILURE,
+  (token) => api.getEmailItems(token, userId, accountId),
   true,
   {
     userId,

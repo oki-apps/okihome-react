@@ -6,21 +6,23 @@ import './Navbar.css';
 
 import NewTabModal from './NewTabModal';
 import AddFeedModal from './AddFeedModal';
+import AddEmailModal from './AddEmailModal';
 
 import userManager from '../userManager';
 
-import { fetchVersion, fetchUser, addTab, addWidget } from '../actions'
-import { getApiVersion, getAllTabs, getUnreadCountPerTab } from '../reducers'
+import { fetchVersion, fetchUser, addTab, addWidget, fetchServices, fetchAccounts } from '../actions'
+import { getApiVersion, getAllTabs, getUnreadCountPerTab, getUserId, getServices, getAccounts } from '../reducers'
 
 import { Link } from 'react-router'
 
 class Navbar extends Component {
-  constructor(props) {
-    super(props);
-  }
 
   componentDidMount() {
     this.props.fetchVersion();
+    if(this.props.oidc && this.props.oidc.user && this.props.oidc.user.profile && this.props.oidc.user.profile.sub) {
+      this.props.fetchServices();
+      this.props.fetchAccounts(this.props.oidc.user.profile.sub);
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -33,7 +35,9 @@ class Navbar extends Component {
       currentSub = this.props.oidc.user.profile.sub;
     }
     if(currentSub !== prevSub && currentSub) {
+      this.props.fetchServices();
       this.props.fetchUser(currentSub);
+      this.props.fetchAccounts(currentSub);
     }
   }
 
@@ -50,6 +54,7 @@ class Navbar extends Component {
       <div>
         <NewTabModal onNewTabClick={this.props.onNewTabClick} />
         {isOnTab ? <AddFeedModal tabId={tabId} onAddFeedClick={this.props.onAddFeedClick} /> : null }
+        {isOnTab ? <AddEmailModal tabId={tabId} services={this.props.services} accounts={this.props.accounts} onAddEmailClick={this.props.onAddEmailClick} /> : null }
         <nav className="navbar navbar-fixed-top navbar-light bg-faded">
           <Link to="/" className="navbar-brand" activeClassName="active">
             <img src={logo} width="24" height="24" className="align-baseline" alt="" />{' '}
@@ -68,7 +73,7 @@ class Navbar extends Component {
                 </a>
                 <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
                   {isOnTab ? <a className="dropdown-item" href="#" data-toggle="modal" data-target="#addFeedModal"><i className="fa fa-rss fa-fw"></i> Add feed</a> : null }
-                  {isOnTab ? <a className="dropdown-item" href="#"><i className="fa fa-envelope-o fa-fw"></i> Add email</a> : null }
+                  {isOnTab ? <a className="dropdown-item" href="#" data-toggle="modal" data-target="#addEmailModal"><i className="fa fa-envelope-o fa-fw"></i> Add email</a> : null }
                   {isOnTab ? <div className="dropdown-divider"></div> : null }
                   <a className="dropdown-item" href="#" data-toggle="modal" data-target="#newTabModal"><i className="fa fa-plus-circle fa-fw"></i> New tab</a>
                 </div>
@@ -88,12 +93,21 @@ class Navbar extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  tabs: getAllTabs(state),
-  tabsUnreadCount: getUnreadCountPerTab(state),
-  apiVersion: getApiVersion(state),
-  oidc: state.oidc,
-});
+const mapStateToProps = (state) => {
+  const userId = getUserId(state);
+  
+  const services = getServices(state);
+  const accounts = getAccounts(state, userId);
+
+  return {
+    tabs: getAllTabs(state),
+    tabsUnreadCount: getUnreadCountPerTab(state),
+    apiVersion: getApiVersion(state),
+    oidc: state.oidc,
+    services,
+    accounts,
+  }
+};
 
 const mapDispatchToProps = (dispatch) => ({
   fetchUser: (userId) =>{
@@ -101,6 +115,12 @@ const mapDispatchToProps = (dispatch) => ({
   },
   fetchVersion: () =>{
      dispatch(fetchVersion())
+  },
+  fetchServices : () =>{
+     dispatch(fetchServices())
+  },
+  fetchAccounts : (userId) =>{
+     dispatch(fetchAccounts(userId))
   },
   onLoginClick : (event) => {
     event.preventDefault();
@@ -122,6 +142,16 @@ const mapDispatchToProps = (dispatch) => ({
       widgetType: 'feed',
       config: {
         url: feedURL,
+        display_count: 5
+      }
+    };
+    dispatch(addWidget(tabId, widget));
+  },
+  onAddEmailClick : (event, tabId, accountId) => {
+    let widget = {
+      widgetType: 'email',
+      config: {
+        account_id: accountId,
         display_count: 5
       }
     };
