@@ -15,7 +15,7 @@ class Feed extends Component {
             items.map(item =>
                 <tr key={item.guid}>
                     <td>
-                        <a href={item.link} className={ item.read ? "" : "unread"} onClick={(e) => this.props.onItemClick(e, item.guid)}>{item.title}</a>
+                        <a href={item.link} target="_blank" className={ item.read ? "" : "unread"} onClick={(e) => this.props.onItemClick(e, item.guid)}>{item.title}</a>
                         {' '}<small><TimeAgo date={item.published} /></small>
                     </td>
                 </tr>
