@@ -98,8 +98,15 @@ class Widget extends Component {
             <div className="btn-group btn-group-sm" role="group" aria-label="Actions">
               {allowMarkAllRead ? <button type="button" className="btn btn-secondary" onClick={this.onMarkAllRead} ><span className="fa fa-envelope-open-o" aria-hidden="true"></span></button> : null }
               <button type="button" className="btn btn-secondary" onClick={this.onRefresh} ><span className="fa fa-refresh" aria-hidden="true"></span></button>
-              <button type="button" className="btn btn-secondary" onClick={this.settingsClick} ><span className="fa fa-cog" aria-hidden="true"></span></button>
-              <button type="button" className="btn btn-secondary" onClick={this.onDelete} ><span className="fa fa-trash" aria-hidden="true"></span></button>
+              <div className="dropdown btn-group btn-group-sm">
+                <button type="button" className="btn btn-secondary dropdown-toggle dropdown-toggle-split" id="dropdownWidget" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span className="sr-only">Toggle Dropdown</span>
+                </button>
+                <ul className="dropdown-menu" aria-labelledby="dropdownWidget">
+                  <li><a href="#" className="dropdown-item" onClick={this.settingsClick} ><span className="fa fa-cog" aria-hidden="true"></span> Settings</a></li>
+                  <li><a href="#" className="dropdown-item" onClick={this.onDelete} ><span className="fa fa-trash" aria-hidden="true"></span> Delete</a></li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
