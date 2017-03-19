@@ -117,7 +117,7 @@ class Widget extends Component {
     return (
       <div className="card">
         <div className="card-header">
-          {link ? <a href="{link}" target="_blank">{title}</a> : <span>{title}</span>}
+          {link ? <a href={link} target="_blank">{title}</a> : <span>{title}</span>}
           <div className="pull-right">
             {unreadCount>0 ? <span className="tag tag-default">{unreadCount}</span> : null}  {' '}
             <div className="btn-group btn-group-sm" role="group" aria-label="Actions">
