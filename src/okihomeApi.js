@@ -100,6 +100,14 @@ export const getEmailItems = function(token, userId, accountId) {
   return request(token,config.baseApi+'/users/'+userId+'/accounts/'+accountId+'/emails')
 };
 
+export const backup = function(token, userId) {
+  return request(token,config.baseApi+'/users/'+userId+'/backup', 'GET')
+};
+
+export const restore = function(token, userId, data) {
+  return request(token,config.baseApi+'/users/'+userId+'/backup', 'POST', data)
+};
+
 // a request helper which reads the access_token from the redux state and passes it in its HTTP request
 export default function request(token, url, method = 'GET', bodyObject = null) {
   const headers = new Headers();
