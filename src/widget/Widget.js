@@ -57,7 +57,12 @@ class Widget extends Component {
   }
 
   onMarkAllRead(e) {
-    const itemGuids = this.props.items.map(item => item.guid);
+    let itemGuids = []
+    this.props.items.forEach(item => {
+      if(!item.read) {
+        itemGuids.push(item.guid);
+      }
+    })
     this.props.onMarkRead(this.props.widgetType, this.props.userId, itemGuids);
   }
 

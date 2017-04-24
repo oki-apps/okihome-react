@@ -9,6 +9,15 @@ const userManagerConfig = {
   filterProtocolClaims: true,
   loadUserInfo: true,
 };
+/*
+const userManagerConfig = {
+  client_id: 'okihome-app',
+  redirect_uri: `${window.location.protocol}//${window.location.hostname}${window.location.port ? `:${window.location.port}` : ''}/callback`,
+  response_type: 'id_token token',
+  scope: 'openid profile email offline_access',
+  authority: 'http://127.0.0.1:5556/dex',
+  loadUserInfo: false,
+};*/
 
 const userManager = createUserManager(userManagerConfig);
 
