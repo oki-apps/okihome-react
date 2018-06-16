@@ -50,4 +50,4 @@ const feeds = combineReducers({
 export default feeds;
 
 export const reducer = feeds;
-export const getItems = (state, userId, feedId) => state.itemsByUserFeed && state.itemsByUserFeed[userId] ? state.itemsByUserFeed[userId][feedId] : [];
+export const getItems = (state, userId, feedId) => state.itemsByUserFeed && state.itemsByUserFeed[userId] && state.itemsByUserFeed[userId][feedId] ? state.itemsByUserFeed[userId][feedId] : [];
