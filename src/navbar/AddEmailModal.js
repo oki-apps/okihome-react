@@ -39,7 +39,7 @@ class AddEmailModal extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if(!this.state.selectedService && this.props.services) {
+    if(!this.state.selectedService && this.props.services && this.props.services.length>0) {
       this.setState({selectedService: this.props.services[0].name})
     }
     if(!this.state.selectedAccount && this.props.accounts && this.state.selectedService) {
