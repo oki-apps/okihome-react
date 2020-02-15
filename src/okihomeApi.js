@@ -1,7 +1,7 @@
 
 let config = {
-  base : 'https://api.home.okiapps.com',
-  baseApi : 'https://api.home.okiapps.com/api',
+  base : 'https://api.home.xdbsoft.com',
+  baseApi : 'https://api.home.xdbsoft.com/api',
 }
 
 if(process.env.NODE_ENV === "development") {
